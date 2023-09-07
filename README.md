@@ -1,5 +1,5 @@
 - 👋 Hi, I’m @mayanksonwane
-- 👀 I’m interested in Hacking
+- 👀 I’m interested in Ethical Hacking
 - 🌱 I’m currently learning Python
 
 <!---
