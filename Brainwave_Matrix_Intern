@@ -1,0 +1,95 @@
+Brainwave Matrix Solutions
+TASK 2nd PHASE OF INTERNSHIP-
+9- Cyber Security Intern
+PASSWORD STRENGTH CHECKER
+Code- 
+import re
+import string
+
+def check_password_strength(password):
+    # Initialize score and feedback
+    score = 0
+    feedback = []
+
+    # Check length
+    if len(password) < 8:
+        feedback.append("Password is too short. It should be at least 8 characters long.")
+    elif len(password) >= 12:
+        score += 2
+        feedback.append("Good length!")
+    else:
+        score += 1
+
+    # Check for uppercase letters
+    if re.search(r'[A-Z]', password):
+        score += 1
+    else:
+        feedback.append("Add uppercase letters for stronger password.")
+
+    # Check for lowercase letters
+    if re.search(r'[a-z]', password):
+        score += 1
+    else:
+        feedback.append("Add lowercase letters for stronger password.")
+
+    # Check for numbers
+    if re.search(r'\d', password):
+        score += 1
+    else:
+        feedback.append("Add numbers for stronger password.")
+
+    # Check for special characters
+    if re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        score += 1
+    else:
+        feedback.append("Add special characters for stronger password.")
+
+    # Check for repeating characters
+    if re.search(r'(.)\1{2,}', password):
+        feedback.append("Avoid repeating characters.")
+
+    # Check for sequential characters
+    if any(password[i:i+3] in (string.ascii_lowercase + string.ascii_uppercase + string.digits) for i in range(len(password)-2)):
+        feedback.append("Avoid sequential characters.")
+
+    # Check for common passwords (this list should be much more comprehensive in a real application)
+    common_passwords = ['password', '123456', 'qwerty', 'admin']
+    if password.lower() in common_passwords:
+        score = 0
+        feedback = ["This is a very common password. Please choose a unique password."]
+
+    # Determine strength based on score
+    if score < 2:
+        strength = "Very Weak"
+    elif score < 3:
+        strength = "Weak"
+    elif score < 4:
+        strength = "Moderate"
+    elif score < 5:
+        strength = "Strong"
+    else:
+        strength = "Very Strong"
+
+    return strength, feedback
+
+def main():
+    print("Welcome to the Password Strength Checker!")
+    while True:
+        password = input("\nEnter a password to check (or 'quit' to exit): ")
+        if password.lower() == 'quit':
+            break
+
+        strength, feedback = check_password_strength(password)
+
+        print(f"\nPassword Strength: {strength}")
+        if feedback:
+            print("Feedback:")
+            for item in feedback:
+                print(f"- {item}")
+        else:
+            print("Great job! Your password is strong.")
+
+    print("Thank you for using the Password Strength Checker!")
+
+if __name__ == "__main__":
+    main()
