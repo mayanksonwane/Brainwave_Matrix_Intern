@@ -1,0 +1,80 @@
+Brainwave Matrix Solutions
+
+TASK 1ST PHASE OF INTERNSHIP-
+9- Cyber Security Intern
+Build a Python Cyber Security - Phishing Link Scanner
+Code- 
+import re
+import requests
+from urllib.parse import urlparse
+
+# A list of known phishing domains (you should regularly update this list)
+PHISHING_DOMAINS = [
+    'example-phishing.com',
+    'fake-bank.com',
+    'scam-site.net'
+]
+
+def is_known_phishing_domain(url):
+    """Check if the domain is in the list of known phishing domains."""
+    parsed_url = urlparse(url)
+    domain = parsed_url.netloc
+    return domain in PHISHING_DOMAINS
+
+def has_suspicious_patterns(url):
+    """Check for common suspicious patterns in the URL."""
+    suspicious_patterns = [
+        r'paypal.*\.com',  # PayPal lookalike domains
+        r'google.*\.com',  # Google lookalike domains
+        r'secure.*\.com',  # Domains trying to look secure
+        r'login.*\.com',   # Domains focused on login
+        r'account.*\.com', # Domains focused on accounts
+        r'.*\.tk',         # .tk domains (often used in phishing)
+        r'.*-?security-?.*\.com', # Domains with 'security' in them
+    ]
+    
+    for pattern in suspicious_patterns:
+        if re.search(pattern, url, re.IGNORECASE):
+            return True
+    return False
+
+def check_ssl(url):
+    """Check if the website uses SSL (HTTPS)."""
+    parsed_url = urlparse(url)
+    return parsed_url.scheme == 'https'
+
+def scan_url(url):
+    """Scan a URL for potential phishing indicators."""
+    print(f"Scanning URL: {url}")
+    
+    if is_known_phishing_domain(url):
+        print("WARNING: This URL is a known phishing domain!")
+        return
+    
+    if has_suspicious_patterns(url):
+        print("CAUTION: This URL contains suspicious patterns.")
+    else:
+        print("No suspicious patterns detected in the URL.")
+    
+    if not check_ssl(url):
+        print("WARNING: This website does not use HTTPS.")
+    else:
+        print("The website uses HTTPS.")
+    
+    try:
+        response = requests.get(url, timeout=5)
+        if response.status_code == 200:
+            print(f"Website is accessible. Status code: {response.status_code}")
+        else:
+            print(f"Website returned an unexpected status code: {response.status_code}")
+    except requests.RequestException as e:
+        print(f"Error accessing the website: {e}")
+
+# Example usage
+if __name__ == "__main__":
+    while True:
+        url = input("Enter a URL to scan (or 'quit' to exit): ")
+        if url.lower() == 'quit':
+            break
+        scan_url(url)
+        print("\n")
